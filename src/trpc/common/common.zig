@@ -1,7 +1,8 @@
 const std = @import("std");
+const def = @import("def.zig");
 
-pub fn validate(comptime TRPC: type) void {
-    const tInfo = @typeInfo(TRPC);
+pub fn validate(comptime Service: type) void {
+    const tInfo = @typeInfo(Service);
 
     if (tInfo != .Struct) @compileError("Expected struct");
 
@@ -40,7 +41,7 @@ pub fn Auth() type {
 //construction blocks of the rpc system
 const TrpcFunction = struct {
     rType: type,
-    name: []const u8,
+    id: []const u8,
 
     idempotency: bool,
     auth: bool,
@@ -48,19 +49,16 @@ const TrpcFunction = struct {
 
 const TrpcType = struct {
     rType: type,
-    name: []const u8,
+    id: []const u8,
 };
 
 const TrpcService = struct {
-    cfg: type,
+    cfg: def.TrpcDefConf,
 
     pub fn init() TrpcService {
         return TrpcService{};
     }
 
     pub fn deInit(self: *TrpcService) void {
-        defer {
-            _ = self.cfg;
-        }
     }
 };
