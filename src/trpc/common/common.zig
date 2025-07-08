@@ -1,16 +1,18 @@
 const std = @import("std");
 const def = @import("def.zig");
 
-pub fn validate(comptime Service: type) void {
+pub fn intrCollectService(comptime Service: type) [][]const u8 {
     const tInfo = @typeInfo(Service);
-
     if (tInfo != .Struct) @compileError("Expected struct");
 
-    for (tInfo.@"struct".fields) |fInfo| {
+    const sFields = tInfo.@"struct".fields;
+    const fieldNames = [sFields.len][]const u8;
+
+    for (sFields, 0..) |fInfo, i| {
+        fieldNames[i] = fInfo.name;
         if (fInfo.type == .Fn) {
             const fnInfo = tInfo.@"fn";
-            fnInfo.params;
-            fnInfo.return_type;
+            _ = fnInfo;
         }
         if (fInfo.type == .Struct) {
             const sInfo = tInfo.@"struct";
@@ -20,17 +22,11 @@ pub fn validate(comptime Service: type) void {
     }
 }
 
-pub fn wtAuth(secret: []const u8) Auth {
-    return .{
-    };
-}
-
-const AuthProvider = struct {
-};
+const AuthProvider = struct {};
 
 pub fn Auth() type {
     return struct {
-        auth: fn (token : []const u8) bool,
+        auth: fn (token: []const u8) bool,
 
         const Self = @This();
     };
@@ -60,5 +56,6 @@ const TrpcService = struct {
     }
 
     pub fn deInit(self: *TrpcService) void {
+        _ = self;
     }
 };

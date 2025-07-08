@@ -35,6 +35,6 @@ pub const TrUserService = struct {
 };
 
 pub const User = struct {
-    id: type.uuid,
-    name: type.string,
+    id: types.uuid,
+    name: types.string,
 };
