@@ -29,9 +29,17 @@ pub const Trhub = struct {
     userService: TrUserService,
 };
 
+pub const UserError = union(enum) {
+    NotFound,
+    InvalidField: struct {
+        field: types.string,
+        message: types.string,
+    },
+};
+
 pub const TrUserService = struct {
-    upsert: fn (user: User) void,
-    getById: fn (id: types.uuid) void,
+    upsert: fn (user: User) UserError!void,
+    getById: fn (id: types.uuid) UserError!void,
 };
 
 pub const User = struct {
